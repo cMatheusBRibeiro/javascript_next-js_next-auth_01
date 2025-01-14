@@ -9,8 +9,12 @@ import { Account } from "../icons/Account";
 import { Info } from "../icons/Info";
 import { Login } from "../icons/Login";
 import { Button } from "../Button";
+import { getServerSession } from "next-auth";
 
-export const Aside = () => {
+export const Aside = async () => {
+    const session = await getServerSession();
+    console.log(session);
+
     return (
         <aside className={styles.aside}>
             <nav>
@@ -41,9 +45,16 @@ export const Aside = () => {
                         </AsideLink>
                     </li>
                     <li>
-                        <AsideLink href="/logout">
-                            <Login /> Sair
-                        </AsideLink>
+                        {session && (
+                            <AsideLink href="/api/auth/signout">
+                                <Login /> Sair
+                            </AsideLink>
+                        )}
+                        {!session && (
+                            <AsideLink href="/api/auth/signin">
+                                <Login /> Entrar
+                            </AsideLink>
+                        )}
                     </li>
                 </ul>
             </nav>
